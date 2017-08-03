@@ -12,6 +12,21 @@ parser & generator for Mobi
 
 https://docs.rs/palmdb[Documentation]
 
+== Installation & Usage
+
+Add the following to the `[dependencies]` section of your `Cargo.toml` file:
+
+.Cargo.toml
+----
+palmdb = "0.1.0"
+----
+
+After that add this to your crate root:
+
+----
+extern crate palmdb;
+----
+
 == Example
 
 ----

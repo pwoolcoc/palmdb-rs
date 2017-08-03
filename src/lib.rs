@@ -45,6 +45,9 @@ extern crate nom;
 extern crate error_chain;
 #[macro_use]
 extern crate bitflags;
+#[cfg(test)]
+#[macro_use]
+extern crate nom_test_helpers;
 
 use std::str;
 use std::fmt;
@@ -375,15 +378,82 @@ named!(parse_db< PalmDB >,
 
 #[cfg(test)]
 mod tests {
-    use std::fs::File;
-    use std::io::Read;
-    use std::str;
-
-    use nom::IResult;
+    use super::*;
 
     #[test]
-    fn test_record_info_parser() {}
+    fn test_record_info_parser() {
+        let data = vec![0, 0, 4, 210, 0b0011_0000, 0, 1, 0];
+        let record = record_info_parser(&data[..]);
+
+        let flags = SECRET_RECORD_BIT | BUSY_BIT;
+        let should_be = ( 1234, flags, 0, 1, 0);
+
+        assert_finished_and_eq!(record, should_be);
+    }
 
     #[test]
-    fn test_parse_db() {}
+    fn test_parse_db() {
+        let data = vec![
+            // name
+            'F' as u8, 'o' as u8, 'o' as u8, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0,
+
+            // attributes
+            0, 0b0000_0010,
+
+            // version
+            0, 1,
+
+            // all 4 bytes:
+            // creation_date
+            0, 0, 0, 0,
+            // modified_date
+            0, 0, 0, 0,
+            // last_backup_date
+            0, 0, 0, 0,
+            // modification_number
+            0, 0, 0, 0,
+            // app_info_id
+            0, 0, 0, 0,
+            // sort_info_id
+            0, 0, 0, 0,
+            // type_
+            'B' as u8, 'O' as u8, 'O' as u8, 'K' as u8,
+            // creator
+            'M' as u8, 'O' as u8, 'B' as u8, 'I' as u8,
+            // unique_id_seed
+            0, 0, 0, 0,
+            // next_record_list_id
+            0, 0, 0, 0,
+
+            // num_records (2)
+            0, 1,
+
+            // record_info_list (8 * num_records)
+            0, 0, 0, 86, 0b0001_0000, 0, 0, 0,
+
+            // records
+            'b' as u8, 'a' as u8, 'r' as u8,
+        ];
+        let db = parse_db(&data[..]);
+
+        assert_finished!(db);
+
+        match db {
+            IResult::Done(_, o) => {
+                assert_eq!(o.name, "Foo");
+                assert!(o.is_read_only());
+                assert_eq!(o.version, 1);
+                assert_eq!(o.len(), 1);
+                let record_info = o.record_info(0).expect("Couldn't get record info");
+                assert!(record_info.is_secret());
+                let record = o.get(0).expect("Couldn't get record");
+                assert_eq!(record.len(), 3);
+                assert_eq!(String::from_utf8_lossy(record), "bar".to_string());
+            },
+            _ => panic!("How did we get here?"),
+        };
+    }
 }

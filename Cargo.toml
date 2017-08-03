@@ -5,4 +5,11 @@ version = "0.1.0"
 [dependencies]
 bitflags = "0.9.1"
 error-chain = "0.10.0"
-nom = "3.2.0"
+
+[dependencies.nom]
+version = "3.2.0"
+features = ["verbose-errors"]
+
+[dev-dependencies.nom-test-helpers]
+version = "3.0.0"
+features = ["verbose-errors"]

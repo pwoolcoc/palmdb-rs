@@ -2,6 +2,15 @@
 authors = ["Paul Woolcock <pwoolcock@tenable.com>"]
 name = "palmdb"
 version = "0.1.0"
+repository = "https://github.com/pwoolcoc/palmdb-rs"
+homepage = "https://github.com/pwoolcoc/palmdb-rs"
+license = "MIT/Apache-2.0"
+readme = "README.adoc"
+documentation = "https://docs.rs/palmdb"
+description = """
+Parses PalmDB files
+"""
+
 [dependencies]
 bitflags = "0.9.1"
 error-chain = "0.10.0"

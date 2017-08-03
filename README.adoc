@@ -1,0 +1,30 @@
+= PalmDB parser for Rust
+
+This crate implements a simple PalmDB parser for Rust. Why? Because .mobi 
+files use it and I want to generate .mobi files, and the first step was getting
+familiar with the format. Next step will be adding a generator for PalmDB, and a
+parser & generator for Mobi
+
+== Example
+
+----
+extern crate palmdb;
+
+use std::fs::File;
+use std::io::{self, Read};
+
+use palmdb::PalmDB;
+
+fn run() -> Result<(), io::Error> {
+    let mut f = File::open("/path/to/palmdb/file")?;
+    let mut input = vec![];
+    f.read_to_end(&mut input)?;
+    let db = PalmDB::parse(&input).expect("Could not parse db file");
+}
+
+fn main() {
+    if let Err(_) = run() {
+        ::std::process::exit(1);
+    }
+}
+----

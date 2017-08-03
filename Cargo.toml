@@ -1,0 +1,8 @@
+[package]
+authors = ["Paul Woolcock <pwoolcock@tenable.com>"]
+name = "palmdb"
+version = "0.1.0"
+[dependencies]
+bitflags = "0.9.1"
+error-chain = "0.10.0"
+nom = "3.2.0"

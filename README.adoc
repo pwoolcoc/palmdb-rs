@@ -1,9 +1,13 @@
 = PalmDB parser for Rust
 
+image:https://travis-ci.org/pwoolcoc/palmdb-rs.svg?branch=master["Build Status", link="https://travis-ci.org/pwoolcoc/palmdb-rs"]
+
 This crate implements a simple PalmDB parser for Rust. Why? Because .mobi 
 files use it and I want to generate .mobi files, and the first step was getting
 familiar with the format. Next step will be adding a generator for PalmDB, and a
 parser & generator for Mobi
+
+https://docs.rs/palmdb[Documentation]
 
 == Example
 

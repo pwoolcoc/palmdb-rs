@@ -38,6 +38,9 @@
         unstable_features,
         unused_import_braces, unused_qualifications)]
 
+#![cfg_attr(feature = "dev", allow(unstable_features))]
+#![cfg_attr(feature = "dev", feature(plugin))]
+#![cfg_attr(feature = "dev", plugin(clippy))]
 
 #[macro_use]
 extern crate nom;
@@ -120,7 +123,7 @@ pub struct PalmDB<'a> {
 impl<'a> PalmDB<'a> {
     /// Takes a byte slice as input and attempts to parse it into a `PalmDB` structure
     pub fn parse(input: &'a [u8]) -> Result<PalmDB<'a>> {
-        match parse_db(&input) {
+        match parse_db(input) {
             IResult::Done(_, o) => {
                 Ok(o)
             },
@@ -152,7 +155,7 @@ impl<'a> PalmDB<'a> {
             }
             _ => {
                 return Err(
-                    ErrorKind::Msg(format!("Could not parse record info")).into(),
+                    ErrorKind::Msg("Could not parse record info".into()).into(),
                 )
             }
         })
@@ -226,6 +229,11 @@ impl<'a> PalmDB<'a> {
     /// Returns the number of records in the DB
     pub fn len(&self) -> usize {
         self.num_records as usize
+    }
+
+    /// Returns true if there are no records in the DB
+    pub fn is_empty(&self) -> bool {
+        self.num_records == 0
     }
 }
 

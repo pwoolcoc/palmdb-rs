@@ -117,10 +117,14 @@ pub struct PalmDB<'a> {
 impl<'a> PalmDB<'a> {
     /// Takes a byte slice as input and attempts to parse it into a `PalmDB` structure
     pub fn parse(input: &'a [u8]) -> Result<PalmDB<'a>> {
-        let palmdb = parse_db(&input)
-            .to_result()
-            .chain_err(|| "Error parsing DB")?;
-        Ok(palmdb)
+        match parse_db(&input) {
+            IResult::Done(_, o) => {
+                Ok(o)
+            },
+            _ => {
+                Err(ErrorKind::Msg("Could not parse PalmDB file".into()).into())
+            }
+        }
     }
 
     /// Returns the metadata for record `number`. If there is no record at that index,

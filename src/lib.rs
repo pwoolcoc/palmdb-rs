@@ -226,6 +226,36 @@ impl<'a> PalmDB<'a> {
         self.attributes.contains(NO_ALLOW_COPY)
     }
 
+    /// Returns true if the `0x0002` bit is set for the DB
+    pub fn set_read_only(&mut self) {
+        self.attributes.set(READ_ONLY, true)
+    }
+
+    /// Returns true if the `0x0004` bit is set for the DB
+    pub fn set_app_info_area_is_dirty(&mut self) {
+        self.attributes.set(DIRTY_APP_INFO_AREA, true)
+    }
+
+    /// Returns true if the `0x0008` bit is set for the DB
+    pub fn set_do_backup(&mut self) {
+        self.attributes.set(BACKUP, true)
+    }
+
+    /// Returns true if the `0x0010` bit is set for the DB
+    pub fn set_okay_to_install_over(&mut self) {
+        self.attributes.set(INSTALL_OVER, true)
+    }
+
+    /// Returns true if the `0x0020` bit is set for the DB
+    pub fn set_do_force_reset(&mut self) {
+        self.attributes.set(FORCE_RESET, true)
+    }
+
+    /// Returns true if the `0x0040` bit is set for the DB
+    pub fn set_no_allow_copy(&mut self) {
+        self.attributes.set(NO_ALLOW_COPY, true)
+    }
+
     /// Returns the number of records in the DB
     pub fn len(&self) -> usize {
         self.num_records as usize
